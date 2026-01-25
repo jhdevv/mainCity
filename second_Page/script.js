@@ -1,53 +1,72 @@
-const player = document.getElementById("player");
-const chao = document.querySelector(".platform").getBoundingClientRect();
-let colision_chao = chao.y
-let x = 50;
-let y_objeto = 200;
-let velocityY = 0;
-let gravity = 0.5;
-let isJumping = false;
+const canvas = document.getElementById("canvas")
+const CanvaContexto = canvas.getContext("2d");
 
-// Teclado
-document.addEventListener("keydown", (e) => {
-    //e.preventDefault()
-  if (e.key === "d" || e.key === "D"){x += 5}
-  if (e.key === "a" || e.key === "A"){ x -= 5;}
+let createReact = (x, y, width, height, color) => {
+    CanvaContexto.fillStyle = color;
+    CanvaContexto.fillRect(x, y, width, height);
+};
+let fps = 30;
+let oneBlocks = 20;
+let muroColor = "#342DCA"
 
-  if (e.key === " " && !isJumping) {
-    velocityY = -10;
-    isJumping = true;
-  }
-});
+const DIRECTION_RIGHT = 4;
+const DIRECTION_UP = 3;
+const DIRECTION_LEFT = 2;
+const DIRECTION_BOTTON = 1;
 
-// Loop do jogo
-function gameLoop() {
-  velocityY += gravity;
-  y_objeto += velocityY;
 
-  // chão
-if (y_objeto <= colision_chao - 83) {
-  gravity = 0.5;
-  isJumping = true;
-} else {
-  y_objeto = colision_chao - 83;
-  velocityY = 0;
-  gravity = 0;
-  isJumping = false;
+let mapa = 
+[
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
+
+let gameLoop = () => {
+     update()
+     draw()
 }
 
+let update = () =>{
 
-
- if (x + chao.left > chao.left && x < chao.width) {
-   console.log("colisão horizontal OK");
 }
-// NÃO mexe em velocityY, gravity ou isJumping aqui
 
-  player.style.left = x + "px";
-  player.style.top = y_objeto + "px";
-
-  requestAnimationFrame(gameLoop);
+let draw = () =>{
+    createReact(0, 0, canvas.width, canvas.height, "black")
+    drawWalls()
 }
- console.log(chao)
-gameLoop();
 
+let gameIntervalo = setInterval(gameLoop, 1000/ fps) 
+// 30 quadros por segundo de atualização!
 
+let drawWalls = () => {
+    for(let i = 0; i < mapa.length; i++){
+        for(let j = 0; j < mapa[0].length; j++){
+            if(mapa[i][j] == 1)[
+                createReact(j * oneBlocks, i * oneBlocks, oneBlocks, oneBlocks, muroColor)
+            ]
+        }
+    }
+}
