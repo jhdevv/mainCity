@@ -9,4 +9,4 @@ function pop(){
 }
 
 
-setInterval(pop, 30000)
+setInterval(pop, 5000)
