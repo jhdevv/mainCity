@@ -16,6 +16,7 @@ do{
         continue;
 } 
 }while(nome.match(/[0-9]/g) || nome == ""){
+    console.log("enviado!")
   localStorage.setItem("Nome", nome)
 }
 
