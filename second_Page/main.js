@@ -1,4 +1,6 @@
 const propaganda = document.querySelector("#pops")
+const letras_coloridas = document.querySelectorall("p")
+
 let nome; 
 function pop(){
     if(propaganda.style.display == "none"){
@@ -7,8 +9,7 @@ function pop(){
     propaganda.style.display = "none" 
     }
 }
-
-
+function mensagem(){
 do{
     nome = prompt("Qual seu nome?")
     if(nome.match(/[0-9]/g) || nome == ""){
@@ -19,5 +20,8 @@ do{
     console.log("enviado!")
   localStorage.setItem("Nome", nome)
 }
+}
 
+
+mensagem()
 setInterval(pop, 5000)
