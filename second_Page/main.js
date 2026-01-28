@@ -1,5 +1,4 @@
 const propaganda = document.querySelector("#pops")
-const letras_coloridas = document.querySelectorall("p")
 
 let nome; 
 function pop(){
@@ -21,6 +20,7 @@ do{
   localStorage.setItem("Nome", nome)
 }
 }
+
 
 
 mensagem()
